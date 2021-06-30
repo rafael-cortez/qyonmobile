@@ -1,6 +1,5 @@
+import React, { useEffect, useContext } from "react"
 import { faLock, faUser } from "@fortawesome/free-solid-svg-icons"
-import React from "react"
-import AsyncStorage from "@react-native-community/async-storage"
 import { showToastWithGravity } from "../../Components/Toast/index"
 import {
   View,
@@ -14,15 +13,19 @@ import {
 } from "react-native"
 
 import InputText from "../../Components/InputText/index"
-import { useContext } from "react"
 import { UserContext } from "../../Contexts/UserContext"
 
 const LoginScreen = ({ navigation }) => {
   const [username, setUsername] = React.useState("")
   const [password, setPassword] = React.useState("")
   const [keepSigned, setKeepSigned] = React.useState(false)
-  const [loading, setLoading] = React.useState(false)
-  const { user, doLogin, setUser } = useContext(UserContext)
+  const [loading, setLoading] = React.useState(true)
+  const { doLogin, checkStorage } = useContext(UserContext)
+
+  useEffect(() => {
+    checkStorage()
+    setLoading(false)
+  }, [checkStorage])
 
   const login = async () => {
     setLoading(true)
@@ -33,7 +36,16 @@ const LoginScreen = ({ navigation }) => {
     try {
       await doLogin(username, password, keepSigned)
     } catch (error) {
-      showToastWithGravity(`Error: ${error.message}`)
+      if (
+        error.response ||
+        error.response.status ||
+        error.response.status === 401
+      ) {
+        showToastWithGravity(`Senha inválida`)
+        return
+      }
+      showToastWithGravity(`Usuário inválido`)
+      return
     } finally {
       setLoading(false)
     }

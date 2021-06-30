@@ -1,14 +1,7 @@
-import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome"
 import TextBox from "react-native-password-eye"
 import React from "react"
-import {
-  View,
-  Text,
-  TextInput,
-  StyleSheet,
-  TouchableOpacity,
-} from "react-native"
+import { View, Text, StyleSheet } from "react-native"
 
 const InputText = (props) => {
   return (
@@ -57,13 +50,6 @@ const styles = StyleSheet.create({
     marginRight: 10,
     marginLeft: 20,
     fontSize: 10,
-  },
-  eyeIcon: {
-    color: "#333",
-    position: "absolute",
-    top: -27,
-    right: -130,
-    paddingHorizontal: 10,
   },
   labelView: {
     flexDirection: "row",

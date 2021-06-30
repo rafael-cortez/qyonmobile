@@ -3,7 +3,6 @@ import HomeScreen from "../Screens/HomeScreen/index"
 import MapScreen from "../Screens/MapScreen/index"
 import { createStackNavigator } from "@react-navigation/stack"
 import HeaderButtons from "../Components/HeaderButtons/index"
-import { UserProvider } from "../Contexts/UserContext"
 
 const PrivateStack = createStackNavigator()
 

@@ -1,6 +1,11 @@
 import React, { useState, createContext } from "react"
-import { setUser as setStoredUser, getUser } from "../Hooks/useStorage"
+import {
+  setUser as setStoredUser,
+  getUser,
+  removeUser,
+} from "../Hooks/useStorage"
 import axios from "axios"
+import { useCallback } from "react"
 
 export const UserContext = createContext({})
 
@@ -8,9 +13,21 @@ export function UserProvider({ children }) {
   const [user, setUser] = useState(null)
   const [signed, setSigned] = useState(false)
 
-  getUser().then((user) => {
-    if (user) setUser(JSON.parse(user))
-  })
+  const checkStorage = useCallback(() => {
+    getUser().then((user) => {
+      if (user) {
+        setUser(JSON.parse(user))
+        setSigned(true)
+      }
+    })
+  }, [])
+
+  const doLogout = () => {
+    removeUser()
+    setUser(null)
+    setSigned(false)
+  }
+
   const doLogin = async (username, password, keepSigned) => {
     try {
       const response = await axios.post(
@@ -37,6 +54,8 @@ export function UserProvider({ children }) {
         user,
         setUser,
         doLogin,
+        checkStorage,
+        doLogout,
       }}
     >
       {children}
