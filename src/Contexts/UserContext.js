@@ -6,6 +6,8 @@ import {
 } from "../Hooks/useStorage"
 import axios from "axios"
 import { useCallback } from "react"
+import TouchID from "react-native-touch-id"
+import { useEffect } from "react"
 
 export const UserContext = createContext({})
 
@@ -13,11 +15,21 @@ export function UserProvider({ children }) {
   const [user, setUser] = useState(null)
   const [signed, setSigned] = useState(false)
 
-  const checkStorage = useCallback(() => {
+  const checkStorage = useCallback(async () => {
+    const config = {
+      title: "Biometric Auth",
+      sensorErrorDescription: "Invalid Biometric Auth",
+    }
     getUser().then((user) => {
       if (user) {
-        setUser(JSON.parse(user))
-        setSigned(true)
+        TouchID.authenticate("Fingerprint Auth", config)
+          .then((success) => {
+            setUser(JSON.parse(user))
+            setSigned(true)
+          })
+          .catch((error) => {
+            console.log("Invalid Authentication")
+          })
       }
     })
   }, [])
